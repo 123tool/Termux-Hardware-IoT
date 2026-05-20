@@ -1,6 +1,6 @@
-## Termux.Hardware-IoT
+## Termux.Hardware IoT
 
-`Termux.Hardware-IoT` adalah platform kontrol perangkat elektronik dan otomasi rumah (*Smart Home*) berbasis web yang dieksekusi langsung dari dalam ekosistem Android menggunakan Termux. Platform ini memanfaatkan jalur komunikasi **Serial Bus (USB OTG)** secara lokal, menjadikannya solusi kontrol perangkat keras yang mandiri, berlatensi rendah, dan beroperasi penuh tanpa ketergantungan pada koneksi internet ataupun broker MQTT eksternal.
+`Termux.Hardware IoT` adalah platform kontrol perangkat elektronik dan otomasi rumah (*Smart Home*) berbasis web yang dieksekusi langsung dari dalam ekosistem Android menggunakan Termux. Platform ini memanfaatkan jalur komunikasi **Serial Bus (USB OTG)** secara lokal, menjadikannya solusi kontrol perangkat keras yang mandiri, berlatensi rendah, dan beroperasi penuh tanpa ketergantungan pada koneksi internet ataupun broker MQTT eksternal.
 
 Proyek ini dilengkapi dengan fitur **Auto-Fallback Simulator Engine** (Mock Serial). Jika hardware asli tidak terdeteksi, server otomatis beralih ke mode simulasi, memungkinkan pengujian performa UI/UX tetap berjalan lancar selama proses pengembangan.
 
@@ -14,11 +14,13 @@ Proyek ini dilengkapi dengan fitur **Auto-Fallback Simulator Engine** (Mock Seri
 
 ---
 
-## Instalasi & Setup
+## Instalasi & Setup :
+
 ​1. Tahap Persiapan Hardware (Arduino Side)
 ​Buka berkas arduino_sketch/arduino_sketch.ino menggunakan Arduino IDE di PC/Laptop Anda.
 ​Sambungkan papan pengontrol Anda (Arduino Uno/Nano/Mega atau ESP32).
 ​Lakukan kompilasi (Compile) dan unggah (Upload) program tersebut ke papan pengontrol hingga selesai.
+
 ​2. Persiapan Lingkungan Android (Termux Side)
 ​Buka aplikasi Termux di ponsel Android Anda, kemudian jalankan serangkaian perintah berikut untuk memperbarui sistem dan memasang dependensi inti :
 
@@ -41,20 +43,20 @@ cd Termux-Hardware-IoT
 ```
 ## Menjalankan & Pengoperasian
 
-- ​Langkah 1 :
+## Langkah 1 :
 Penyambungan Kabel OTG Fisik
 ​Hubungkan papan Arduino/ESP32 ke ponsel Android Anda menggunakan kabel data USB yang disambungkan ke adapter USB OTG.
 ​Ketika muncul pop-up notifikasi di Android yang menanyakan izin akses perangkat USB ke Termux, berikan centang Izinkan/OK.
 
-- Langkah 2 :
+## Langkah 2 :
 Eksekusi Server Utama
 ​Jalankan mesin backend dengan mengetik perintah berikut di dalam direktori proyek Termux Anda :
 ```
 python3 app.py
 ```
 Sistem akan membaca jalur hardware Anda. Perhatikan indikator log pada terminal :
-​- Jika Hardware Terhubung: [+] Hardware Terdeteksi! Terhubung ke /dev/ttyUSB0
 - ​Jika Menggunakan Mode Simulasi: [!] Hardware asli tidak terdeteksi. Mengaktifkan Mode Simulator MockSerial...
+- Jika Hardware Terhubung: [+] Hardware Terdeteksi! Terhubung ke /dev/ttyUSB0
 
 ## ​Langkah 3 :
 Akses Dashboard via Browser Ponsel
