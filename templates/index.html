@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPY-E // 123TOOL Smart IoT Controller</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* Desain Kaku & Tebal Khas Industrial Neo-Brutalism */
+        .brutal-border {
+            border: 4px solid #000000;
+        }
+        .brutal-card-dark {
+            background: #1e293b; /* Slate 800 */
+            border: 4px solid #000000;
+            box-shadow: 6px 6px 0px #000000;
+            transition: all 0.15s ease;
+        }
+        .brutal-card-dark:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000000;
+        }
+        .brutal-btn-toggle {
+            border: 3px solid #000000;
+            box-shadow: 3px 3px 0px #000000;
+            font-weight: 900;
+            transition: all 0.1s ease;
+        }
+        .brutal-btn-toggle:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #000000;
+        }
+        .status-badge {
+            border: 2px solid #000000;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body class="bg-zinc-900 text-slate-100 font-sans min-h-screen pb-12">
+
+    <header class="bg-yellow-400 text-black py-5 px-4 mb-8 border-b-4 border-black shadow-[0_4px_0_#000]">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-black tracking-tighter uppercase">🛠️ SPY-E // 123TOOL</h1>
+                <p class="text-xs font-bold uppercase tracking-widest text-zinc-800">Termux Hardware IoT Controller (V1.0)</p>
+            </div>
+            <div id="conn-status" class="status-badge bg-black text-yellow-400 px-4 py-2 font-bold text-xs uppercase">
+                Mengecek Koneksi...
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <section class="md:col-span-2 space-y-6">
+            <div class="bg-zinc-800 brutal-border p-4 shadow-[4px_4px_0_#000]">
+                <h2 class="text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                    <span>🔌</span> Saklar Kontrol Relai Utama
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="brutal-card-dark p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-black uppercase tracking-wide">Lampu Utama</h3>
+                            <span id="state-badge-lamp1" class="status-badge text-[10px] bg-red-500 text-white font-bold px-2 py-0.5">OFF</span>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium mb-6">Relay Jalur Pin 2 Arduino - Ruang Tamu</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="sendControl('lamp1', 'ON')" class="brutal-btn-toggle bg-lime-400 text-black py-2.5 uppercase text-xs cursor-pointer">ON</button>
+                        <button onclick="sendControl('lamp1', 'OFF')" class="brutal-btn-toggle bg-zinc-600 text-white py-2.5 uppercase text-xs cursor-pointer">OFF</button>
+                    </div>
+                </div>
+
+                <div class="brutal-card-dark p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-black uppercase tracking-wide">Lampu Teras</h3>
+                            <span id="state-badge-lamp2" class="status-badge text-[10px] bg-red-500 text-white font-bold px-2 py-0.5">OFF</span>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium mb-6">Relay Jalur Pin 3 Arduino - Halaman Luar</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="sendControl('lamp2', 'ON')" class="brutal-btn-toggle bg-lime-400 text-black py-2.5 uppercase text-xs cursor-pointer">ON</button>
+                        <button onclick="sendControl('lamp2', 'OFF')" class="brutal-btn-toggle bg-zinc-600 text-white py-2.5 uppercase text-xs cursor-pointer">OFF</button>
+                    </div>
+                </div>
+
+                <div class="brutal-card-dark p-6 flex flex-col justify-between sm:col-span-2">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-lg font-black uppercase tracking-wide">Pendingin Udara (AC)</h3>
+                                <span id="state-badge-ac" class="status-badge text-[10px] bg-red-500 text-white font-bold px-2 py-0.5">OFF</span>
+                            </div>
+                            <p class="text-xs text-slate-400 font-medium mt-1">Relay Jalur Pin 4 Arduino - Beban Daya Tinggi (Kamar Tidur)</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 w-full sm:w-64 mt-4 sm:mt-0">
+                            <button onclick="sendControl('ac', 'ON')" class="brutal-btn-toggle bg-cyan-400 text-black py-2.5 uppercase text-xs cursor-pointer">ON</button>
+                            <button onclick="sendControl('ac', 'OFF')" class="brutal-btn-toggle bg-zinc-600 text-white py-2.5 uppercase text-xs cursor-pointer">OFF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="md:col-span-1 space-y-6">
+            <div class="bg-zinc-800 brutal-border p-4 shadow-[4px_4px_0_#000]">
+                <h2 class="text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                    <span>📊</span> Telemetri Real-Time
+                </h2>
+            </div>
+
+            <div class="space-y-4">
+                <div class="brutal-card-dark p-4 bg-zinc-800 flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">🌡️ Suhu Ruangan</span>
+                        <span id="sensor-temp" class="text-3xl font-black font-mono text-amber-400">0</span><span class="text-lg font-bold text-amber-400">°C</span>
+                    </div>
+                    <div class="text-xs font-mono text-slate-500 bg-black/30 p-2 border border-black uppercase">DHT-Sensor</div>
+                </div>
+
+                <div class="brutal-card-dark p-4 bg-zinc-800 flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">☀️ Intensitas Cahaya</span>
+                        <span id="sensor-light" class="text-3xl font-black font-mono text-indigo-400">000</span><span class="text-xs text-slate-400 ml-1">Ldr Lvl</span>
+                    </div>
+                    <div class="text-xs font-mono text-slate-500 bg-black/30 p-2 border border-black uppercase">A0 Analog</div>
+                </div>
+
+                <div class="brutal-card-dark p-4 bg-zinc-800 flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">⚡ Voltase Sistem</span>
+                        <span id="sensor-volt" class="text-3xl font-black font-mono text-emerald-400">0.0</span><span class="text-lg font-bold text-emerald-400"> V</span>
+                    </div>
+                    <div class="text-xs font-mono text-slate-500 bg-black/30 p-2 border border-black uppercase">DC Monitor</div>
+                </div>
+            </div>
+
+            <div class="p-4 bg-black brutal-border text-[11px] font-mono text-slate-400 space-y-1">
+                <div class="text-white font-bold uppercase border-b border-zinc-800 pb-1 mb-2">📟 Serial Event Log</div>
+                <div>[SYSTEM] Pipeline polling operational.</div>
+                <div id="log-serial-status" class="text-lime-400">[SERIAL] Waiting input line...</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 1. Fungsi Mengirim Perintah Saklar ke API Backend
+        function sendControl(deviceName, actionState) {
+            fetch('/api/control', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ device: deviceName, action: actionState })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    updateButtonUI(data.device, data.current_state);
+                    document.getElementById('log-serial-status').innerText = `[SERIAL] Sent payload: ${deviceName.toUpperCase()}_${actionState}`;
+                } else {
+                    alert('Gagal mengirimkan instruksi kontrol: ' + data.message);
+                }
+            })
+            .catch(err => console.error('Error sending control instruction:', err));
+        }
+
+        // 2. Fungsi Membaca Telemetri Secara Berkala (Polling 1 Detik Sekali)
+        function pollHardwareStatus() {
+            fetch('/api/status')
+                .then(res => res.json())
+                .then(data => {
+                    // Update Badge Status Saklar Lampu/AC
+                    Object.keys(data.devices).forEach(dev => {
+                        updateButtonUI(dev, data.devices[dev]);
+                    });
+
+                    // Update Nilai Indikator Sensor
+                    document.getElementById('sensor-temp').innerText = data.sensors.temperature;
+                    document.getElementById('sensor-light').innerText = data.sensors.light_level;
+                    document.getElementById('sensor-volt').innerText = data.sensors.voltage;
+
+                    // Update Top Menu Indikator Hardware status
+                    const connBadge = document.getElementById('conn-status');
+                    if (data.connection_type === 'HARDWARE_OTG_CONNECTED') {
+                        connBadge.className = "status-badge bg-emerald-500 text-black px-4 py-2 font-bold text-xs uppercase";
+                        connBadge.innerText = "🌐 HARDWARE OTG: CONNECTED";
+                    } else {
+                        connBadge.className = "status-badge bg-amber-500 text-black px-4 py-2 font-bold text-xs uppercase";
+                        connBadge.innerText = "⚠️ SIMULATOR ACTIVE";
+                    }
+                })
+                .catch(err => {
+                    const connBadge = document.getElementById('conn-status');
+                    connBadge.className = "status-badge bg-red-600 text-white px-4 py-2 font-bold text-xs uppercase";
+                    connBadge.innerText = "🚨 SERVER DISCONNECTED";
+                });
+        }
+
+        // 3. Helper Pengubah Tampilan Badge ON/OFF
+        function updateButtonUI(device, state) {
+            const badge = document.getElementById(`state-badge-${device}`);
+            if (!badge) return;
+            
+            if (state === 'ON') {
+                badge.className = "status-badge text-[10px] bg-lime-400 text-black font-black px-2 py-0.5";
+                badge.innerText = "ON";
+            } else {
+                badge.className = "status-badge text-[10px] bg-red-500 text-white font-bold px-2 py-0.5";
+                badge.innerText = "OFF";
+            }
+        }
+
+        // Jalankan Loop Polling Otomatis Saat Halaman Siap
+        setInterval(pollHardwareStatus, 1000);
+        document.addEventListener("DOMContentLoaded", pollHardwareStatus);
+    </script>
+</body>
+</html>
