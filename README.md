@@ -63,3 +63,4 @@ Ketik alamat URL lokal berikut pada kolom navigasi browser :
 ```
 http://127.0.0.1:8080
 ```
+Dashboard kontrol siap digunakan. Anda dapat menekan sakelar ON/OFF pada layar untuk memicu relai fisik, sekaligus memantau pergerakan grafik data telemetri sensor yang masuk secara real-time.
